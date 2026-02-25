@@ -1,20 +1,40 @@
 package com.example.lab1
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        val rv: RecyclerView = findViewById(R.id.newsRecyclerView)
+        rv.layoutManager = LinearLayoutManager(this)
+
+
+// A list of standard Android icons we can use for free
+        val defaultImages = listOf(
+            android.R.drawable.ic_menu_camera,
+            android.R.drawable.ic_menu_gallery,
+            android.R.drawable.ic_menu_mapmode,
+            android.R.drawable.ic_menu_send
+        )
+
+        val newsList = List<NewsItem>(10) { index ->
+            NewsItem(
+                title = "Breaking News #${index + 1}",
+                description = "This is a unique summary for news story number ${index + 1}.",
+                // This math loops through the 4 images over and over
+                imageResId = defaultImages[index % defaultImages.size]
+            )
         }
+
+
+
+        rv.adapter = NewsAdapter(newsList)
     }
 }
